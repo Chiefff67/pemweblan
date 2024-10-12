@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoEvent</title>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <style>
+        .custom-card {
+            transition: all 0.3s;
+        }
+        .custom-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(255,255,255,0.1);
+        }
+        .gradient-bg {
+            background: linear-gradient(45deg, #000000, #00897b);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <v-app dark>
+            <v-navigation-drawer v-model="drawer" app>
+                <v-list>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="title">
+                                Concert Hub
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                Admin Dashboard
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+
+                    <v-divider></v-divider>
+
+                    <v-list-item v-for="item in menuItems" :key="item.title" link>
+                        <v-list-item-icon>
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-navigation-drawer>
+
+            <v-app-bar app color="dark" dark>
+                <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+                <v-toolbar-title>GoEvent</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-text-field
+                    hide-details
+                    prepend-icon="mdi-magnify"
+                    single-line
+                    placeholder="Search"
+                    class="mr-4"
+                ></v-text-field>
+                <v-btn icon>
+                    <v-icon>mdi-bell</v-icon>
+                </v-btn>
+                <v-btn icon>
+                    <v-icon>mdi-account</v-icon>
+                </v-btn>
+            </v-app-bar>
+
+            <v-main>
+                <v-container fluid>
+                    <v-row>
+                        <v-col cols="12" md="3" v-for="stat in quickStats" :key="stat.title">
+                            <v-card class="custom-card mb-4">
+                                <v-card-text>
+                                    <div class="d-flex align-center">
+                                        <v-icon large left :color="stat.color">{{ stat.icon }}</v-icon>
+                                        <div>
+                                            <div class="text-h6">{{ stat.value }}</div>
+                                            <div class="text-subtitle-1">{{ stat.title }}</div>
+                                        </div>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col cols="12" md="8">
+                            <v-card class="custom-card mb-4">
+                                <v-card-title>Upcoming Concerts</v-card-title>
+                                <v-data-table
+                                    :headers="headers"
+                                    :items="concerts"
+                                    :items-per-page="5"
+                                    class="elevation-1"
+                                ></v-data-table>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-card class="custom-card mb-4 gradient-bg">
+                                <v-card-title class="white--text">Sales Overview</v-card-title>
+                                <v-card-text>
+                                    <v-sparkline
+                                        :value="salesData"
+                                        :gradient="['#ffffff', '#E0F2F1']"
+                                        :smooth="10"
+                                        :padding="8"
+                                        line-width="2"
+                                        stroke-linecap="round"
+                                        gradient-direction="top"
+                                        auto-draw
+                                        height="100"
+                                    ></v-sparkline>
+                                </v-card-text>
+                            </v-card>
+                            <v-card class="custom-card mb-4">
+                                <v-card-title>Top Selling Venues</v-card-title>
+                                <v-list>
+                                    <v-list-item v-for="venue in topVenues" :key="venue.name">
+                                        <v-list-item-content>
+                                            <v-list-item-title>{{ venue.name }}</v-list-item-title>
+                                        </v-list-item-content>
+                                        <v-list-item-action>
+                                            {{ venue.sales }}
+                                        </v-list-item-action>
+                                    </v-list-item>
+                                </v-list>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col cols="12">
+                            <v-card class="custom-card">
+                                <v-card-title>Recent Ticket Sales</v-card-title>
+                                <v-data-table
+                                    :headers="recentSalesHeaders"
+                                    :items="recentSales"
+                                    :items-per-page="5"
+                                    class="elevation-1"
+                                ></v-data-table>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-main>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify({
+                theme: { dark: true }
+            }),
+            data: () => ({
+                drawer: false,
+                menuItems: [
+                    { title: 'Dashboard', icon: 'mdi-view-dashboard' },
+                    { title: 'Concerts', icon: 'mdi-music' },
+                    { title: 'Tickets', icon: 'mdi-ticket' },
+                    { title: 'Venues', icon: 'mdi-map-marker' },
+                    { title: 'Reports', icon: 'mdi-chart-bar' },
+                    { title: 'Settings', icon: 'mdi-cog' }
+                ],
+                headers: [
+                    { text: 'Concert', value: 'name' },
+                    { text: 'Date', value: 'date' },
+                    { text: 'Venue', value: 'venue' },
+                    { text: 'Tickets Sold', value: 'ticketsSold' }
+                ],
+                concerts: [
+                    { name: 'Rock Festival 2024', date: '2024-07-15', venue: 'Central Park', ticketsSold: 5000 },
+                    { name: 'Jazz Night', date: '2024-08-02', venue: 'Blue Note', ticketsSold: 300 },
+                    { name: 'Pop Extravaganza', date: '2024-08-20', venue: 'Madison Square Garden', ticketsSold: 15000 },
+                    { name: 'Classical Symphony', date: '2024-09-05', venue: 'Carnegie Hall', ticketsSold: 2000 },
+                    { name: 'EDM Fest', date: '2024-09-15', venue: 'Barclays Center', ticketsSold: 10000 },
+                ],
+                salesData: [423, 446, 675, 510, 590, 610, 760, 680, 720, 780, 750, 690, 730, 810],
+                quickStats: [
+                    { title: 'Total Sales', value: '$1,520,450', icon: 'mdi-currency-usd', color: 'green' },
+                    { title: 'Tickets Sold', value: '45,230', icon: 'mdi-ticket', color: 'blue' },
+                    { title: 'Upcoming Concerts', value: '23', icon: 'mdi-calendar', color: 'orange' },
+                    { title: 'New Customers', value: '1,120', icon: 'mdi-account-group', color: 'purple' }
+                ],
+                topVenues: [
+                    { name: 'Madison Square Garden', sales: 25000 },
+                    { name: 'Central Park', sales: 20000 },
+                    { name: 'Barclays Center', sales: 18000 },
+                    { name: 'Radio City Music Hall', sales: 15000 },
+                    { name: 'Beacon Theatre', sales: 10000 }
+                ],
+                recentSalesHeaders: [
+                    { text: 'Customer', value: 'customer' },
+                    { text: 'Concert', value: 'concert' },
+                    { text: 'Date', value: 'date' },
+                    { text: 'Amount', value: 'amount' }
+                ],
+                recentSales: [
+                    { customer: 'John Doe', concert: 'Rock Festival 2024', date: '2024-06-30', amount: '$150' },
+                    { customer: 'Jane Smith', concert: 'Jazz Night', date: '2024-06-30', amount: '$75' },
+                    { customer: 'Bob Johnson', concert: 'Pop Extravaganza', date: '2024-06-29', amount: '$200' },
+                    { customer: 'Alice Brown', concert: 'Classical Symphony', date: '2024-06-29', amount: '$100' },
+                    { customer: 'Charlie Davis', concert: 'EDM Fest', date: '2024-06-28', amount: '$180' }
+                ]
+            })
+        })
+    </script>
+</body>
+</html>
