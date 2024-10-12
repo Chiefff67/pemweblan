@@ -68,9 +68,9 @@
 
                     <div class="mt-12">
                         <button type="button" id="submitRegis" class="w-full py-3 px-6 text-sm tracking-wider font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white focus:outline-none">
-                            Register
+                            Registrasi
                         </button>
-                        <p class="text-sm mt-6 text-gray-800">Sudah punya akun? <a href="http://localhost/pemweblan/login.php" class="text-blue-500 font-semibold hover:underline ml-1">Login disini</a></p>
+                        <p class="text-sm mt-6 text-gray-800">Sudah punya akun? <a href="http://localhost/pemweblan/pages/login.php" class="text-blue-500 font-semibold hover:underline ml-1">Login disini</a></p>
                     </div>
                 </form>
             </div>
@@ -81,7 +81,7 @@
         $(document).ready(function() {
             $("#submitRegis").click(function() {
                 $.ajax({
-                    url: "./config/regis-cek.php", // File PHP untuk memproses registrasi
+                    url: "../config/regis-cek.php", // File PHP untuk memproses registrasi
                     method: "POST",
                     data: {
                         name: $("#name").val(),

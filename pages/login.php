@@ -23,7 +23,7 @@
                             <p class="text-sm mt-4 text-gray-800">
                                 Don't have an account
                                 <a
-                                    href="http://localhost/pemweblan/regis.php"
+                                    href="http://localhost/pemweblan/pages/regis.php"
                                     class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a>
                             </p>
                         </div>
@@ -211,7 +211,7 @@
         $(document).ready(function() {
             $("button").click(function() {
                 $.ajax({
-                    url: "./config/login-cek.php",
+                    url: "../config/login-cek.php",
                     method: "POST",
                     data: {
                         user: $("#user").val(),
