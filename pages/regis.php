@@ -59,12 +59,7 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="flex items-center mt-6">
-                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 shrink-0 rounded" />
-                        <label for="remember-me" class="ml-3 block text-sm text-gray-800">
-                            Saya Menerima <a href="javascript:void(0);" class="text-blue-500 font-semibold hover:underline ml-1">Syarat dan Ketentuan</a>
-                        </label>
-                    </div>
+                    
 
                     <div class="mt-12">
                         <button type="button" id="submitRegis" class="w-full py-3 px-6 text-sm tracking-wider font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white focus:outline-none">

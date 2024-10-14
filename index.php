@@ -91,29 +91,6 @@
                             </div>
                         </div>
 
-                        <div
-                            class="flex flex-wrap items-center justify-between gap-4 mt-6">
-                            <div class="flex items-center">
-                                <input
-                                    id="remember-me"
-                                    name="remember-me"
-                                    type="checkbox"
-                                    class="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-                                <label
-                                    for="remember-me"
-                                    class="ml-3 block text-sm text-gray-800">
-                                    Remember me
-                                </label>
-                            </div>
-                            <div>
-                                <a
-                                    href="jajvascript:void(0);"
-                                    class="text-blue-600 font-semibold text-sm hover:underline">
-                                    Forgot Password?
-                                </a>
-                            </div>
-                        </div>
-
                         <div class="mt-12">
                             <button
                                 type="button"
@@ -211,7 +188,7 @@
         $(document).ready(function() {
             $("button").click(function() {
                 $.ajax({
-                    url: "../config/login-cek.php",
+                    url: "./config/login-cek.php",
                     method: "POST",
                     data: {
                         user: $("#user").val(),
@@ -220,11 +197,17 @@
                     success: function(result) {
                         console.log(result);
                         if (result === "Berhasil") {
-                            pesan(result)
+                            // Jika login berhasil, arahkan ke halaman user_mana.php
+                            window.location.href = "./pages/user_mana.php";
                         } else {
-                            gagal(result)
+                            gagal(result); // Tampilkan pesan error jika login gagal
                         }
                     },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        console.log("Status: " + status);
+                        console.log("Response: " + xhr.responseText);
+                    }
                 });
             });
         });

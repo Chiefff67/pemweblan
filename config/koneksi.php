@@ -1,13 +1,22 @@
 <?php
-$servername   = 'localhost'; // atur host
-$dbuser   = 'root'; // atur user database
-$dbpass   = '';   // atur pass database
-$dbname = 'user_management'; // atur nama database
+$host   = 'localhost'; // atur host
+$user   = 'root'; // atur user database
+$pass   = '';   // atur pass database
+$db    = 'user_management'; // atur nama database
+$charset = 'utf8mb4';
 
-$connect = new mysqli($servername, $dbuser, $dbpass, $dbname);
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
 
-// Cek koneksi, jika gagal tampilkan pesan error
-if ($connect->connect_error) {
-    die("Koneksi gagal: " . $connect->connect_error);
+try {
+    $connectdb = new PDO($dsn, $user, $pass, $options);
+} catch (\PDOException $e) {
+    // Hanya log error, jangan tampilkan ke user
+    error_log("Connection failed: " . $e->getMessage());
+    die(json_encode(['error' => 'Database connection failed']));
 }
 ?>
